@@ -10,6 +10,7 @@ config {
 SELECT
     parse_date('%Y%m%d',event_date) as session_date
     ,farm_fingerprint(concat(user_pseudo_id, (select value.int_value from unnest(event_params) where key = "ga_session_id"))) as session_id
+    ,min(user_pseudo_id) as user_pseudo_id
     ,array_agg(struct(event_timestamp,event_name)order by event_timestamp) as events
     ,(select value.int_value from unnest(event_params) where key = 'ga_session_id') as ga_session_id
 FROM

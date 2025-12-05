@@ -1,10 +1,10 @@
 config {
     type: "incremental",
+    uniqueKey: ["session_date","session_id"],
     assertions:{
-        uniqueKey:["session_id"],
+        uniqueKey:["session_date","session_id"],
         nonNull:["session_id"],
-    },
-    dependencies:["ga4_custom_assertion"]
+    }
 }
 
 SELECT

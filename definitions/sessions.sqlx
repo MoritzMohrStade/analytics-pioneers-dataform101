@@ -1,0 +1,16 @@
+config {
+    type: "incremental",
+    assertions:{
+        uniqueKey:["session_id"],
+        nonNull:["session_id"],
+    },
+    dependencies:["ga4_custom_assertion"]
+}
+
+SELECT
+    parse_date('%Y%m%d',event_date) as session_date
+    ,farm_fingerprint(concat(user_pseudo_id, (select value.int_value from unnest(event_params) where key = "ga_session_id"))) as session_id
+    ,array_agg(struct(event_timestamp,event_name)order by event_timestamp) as events
+FROM
+    ${ref("events_*")}
+GROUP BY ALL

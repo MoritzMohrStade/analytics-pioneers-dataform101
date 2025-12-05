@@ -1,0 +1,13 @@
+config {
+    type:"assertion"
+}
+
+SELECT
+    ecommerce.transaction_id  as transaction_id
+    ,farm_fingerprint(concat(user_pseudo_id, (select value.int_value from unnest(event_params) where key = "ga_session_id"))) as session_id 
+    ,user_pseudo_id
+FROM 
+    ${ref("events_*")}
+where 
+    event_name = "purchase"
+    and ecommerce.transaction_id is not null
